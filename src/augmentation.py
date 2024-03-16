@@ -2,6 +2,7 @@ from imgaug import augmenters as iaa
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+from labeldict import LabelDict
 
 def augment(dataset, n):
     aug = iaa.Sequential([
@@ -15,4 +16,5 @@ def augment(dataset, n):
     all_augmented_imgs.append(imgarr)  
     augmented_imgs = np.concatenate(all_augmented_imgs, axis=0)
     labels = np.tile(dataset.labels, n + 1)
-    return augmented_imgs, [int(l) for l in labels]
+    lbl_dict = LabelDict(labels)
+    return augmented_imgs, lbl_dict.labels2codes(labels), lbl_dict
