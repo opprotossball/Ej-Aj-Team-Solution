@@ -5,7 +5,7 @@ class LabelDict:
         self.labels2codes_dct = {}
         i = 0
         for l in labels:
-            if not self.labels2codes_dct.get(l):
+            if l not in self.labels2codes_dct:
                 self.labels2codes_dct[l] = i
                 i += 1
                 self.codes2labels_dct.append(l)
