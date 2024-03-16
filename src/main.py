@@ -14,8 +14,6 @@ if __name__ == '__main__':
     # print(dct.codes2labels(codes))
     d = torch.load('../data/ModelStealingPub.pt')
     res = augment(d, 2)
-    print(len(d.imgs))
-    print(len(res[0]))
     dct = res[2]
     for i, v in enumerate(dct.codes2labels_dct):
         print(f'{i} -> {v}')
