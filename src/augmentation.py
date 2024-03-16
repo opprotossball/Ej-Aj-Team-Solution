@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 def augment(dataset, n):
     aug = iaa.Sequential([
+        iaa.Fliplr(p=0.5),
+        iaa.Flipud(p=0.5),
         iaa.AddToHueAndSaturation((-20, 20)), 
         iaa.Sometimes(0.5, iaa.GaussianBlur(sigma=(0, 0.5))),
     ])
@@ -13,4 +15,4 @@ def augment(dataset, n):
     all_augmented_imgs.append(imgarr)  
     augmented_imgs = np.concatenate(all_augmented_imgs, axis=0)
     labels = np.tile(dataset.labels, n + 1)
-    return augmented_imgs, labels
+    return augmented_imgs, [int(l) for l in labels]
