@@ -33,6 +33,6 @@ def save(ids, reprs, path):
 
 if __name__ == "__main__":
     dataset = torch.load("../data/SybilAttack.pt")
-    ids, lbls = select_samples(dataset, 36)
+    ids, lbls = select_samples(dataset, 40)
     repres = sybil(ids, 'defense', 'affine')
     
