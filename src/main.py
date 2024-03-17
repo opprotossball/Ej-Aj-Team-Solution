@@ -1,34 +1,55 @@
-from utils import model_stealing_submission
+from utils import model_stealing_submission, model_stealing
 from taskdataset import TaskDataset
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
 from augmentation import augment
 from labeldict import LabelDict
+import random
+import os
+import json
+
+def select_samples(dataset, n):
+    data = list(zip(dataset.imgs, dataset.labels))
+    imgs = []
+    lbls = []
+    random.shuffle(data)
+    present = {}
+    for img, lbl in data:
+        if lbl not in present:
+            present[lbl] = 1
+        if present[lbl] <= n:
+            present[lbl] = present[lbl] + 1
+            imgs.append(img)
+            lbls.append(lbl)
+    return imgs, lbls        
+
+def steal(img):
+    img.save('img.png', 'PNG')
+    res = model_stealing('img.png')
+    os.unlink('img.png')
+    print(type(res))
+    return np.array(img.convert('RGB')), res
+
+def save(imgs, reprs, path):
+    data = {'images': [], 'representations': []}
+    for image, representation in zip(imgs, reprs):
+        data['images'].append(image.tolist()) 
+        data['representations'].append(representation)
+    with open(path, 'w') as f:
+        json.dump(data, f)
 
 if __name__ == '__main__':
-    # lbls = [10, 9, 8, 1, 3, 4, 3, 8, 1, 9]
-    # dct = LabelDict(lbls)
-    # codes = dct.labels2codes(lbls)
-    # print(codes)
-    # print(dct.codes2labels(codes))
-
     d = torch.load('../data/ModelStealingPub.pt')
-    # lst = []
-    # for l in d.labels:
-    #     if l not in lst:
-    #         lst.append(l)
-    # print(len(lst))
-
-    #res = augment(d, 2)
-    dct = LabelDict(d.labels)
-    seen = []
-    for i, v in enumerate(dct.codes2labels_dct):
-        print(f'{i} -> {v}')
-        if v in seen:
-            print("INC")
-            print(v)
-        seen.append(v)
-
-    # from tensorflow.python.client import device_lib 
-    # print(device_lib.list_local_devices())
+    imgs, lbls = select_samples(d, 3)
+    samples = list(zip(imgs, lbls))
+    resimgs = []
+    resreprs = []
+    i = 0
+    for s in samples:
+        img, reprs = steal(s[0]) 
+        resimgs.append(img)
+        resreprs.append(reprs)
+        i += 1
+        print(f'{i} stolen')
+    save(resimgs, resreprs, 'test.json')

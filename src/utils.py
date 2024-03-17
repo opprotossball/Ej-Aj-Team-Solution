@@ -1,7 +1,8 @@
 import requests
+import json
 
-token = 'qnVfXxPZmzZ.....' # bez 5 ostatnich znaków
-server_url = ''
+token = 'qnVfXxPZmzZYahgI'
+server_url = 'http://34.71.138.79:9090'
 
 def model_stealing_submission(path_to_onnx_file: str):
     SERVER_URL = server_url
@@ -31,9 +32,10 @@ def model_stealing(path_to_png_file: str):
         response = requests.get(
             URL, files={"file": img_file}, headers={"token": TEAM_TOKEN}
         )
-
         if response.status_code == 200:
-            return response.content["representation"]
+            decoded_string = response.content.decode('utf-8')
+            data = json.loads(decoded_string)
+            return data['representation']
         else:
             raise Exception(f"Request failed. Status code: {response.status_code}, content: {response.content}")
 
