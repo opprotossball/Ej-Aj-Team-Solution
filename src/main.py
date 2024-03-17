@@ -1,4 +1,4 @@
-from utils import model_stealing_submission, model_stealing
+from utils import model_stealing_submission, model_stealing, model_stealing_reset
 from taskdataset import TaskDataset
 import numpy as np
 import torch
@@ -40,8 +40,10 @@ def save(imgs, reprs, path):
         json.dump(data, f)
 
 if __name__ == '__main__':
+    #model_stealing_reset()
+    #model_stealing_submission('../jajo1.onnx')
     d = torch.load('../data/ModelStealingPub.pt')
-    imgs, lbls = select_samples(d, 3)
+    imgs, lbls = select_samples(d, 1)
     samples = list(zip(imgs, lbls))
     resimgs = []
     resreprs = []
@@ -52,4 +54,4 @@ if __name__ == '__main__':
         resreprs.append(reprs)
         i += 1
         print(f'{i} stolen')
-    save(resimgs, resreprs, 'test.json')
+    save(resimgs, resreprs, 'tmp.json')

@@ -2,14 +2,14 @@
 # PS once we find you, ban won't be your biggest trouble ;P
 
 from typing import List
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 
 import numpy as np
 import requests
 import os
 
-load_dotenv()
+#load_dotenv()
 
 SERVER_URL = 'http://34.71.138.79:9090'
 TEAM_TOKEN = 'qnVfXxPZmzZYahgI'
@@ -120,7 +120,6 @@ def model_stealing_submit(path_to_onnx_file: str):
             raise Exception(
                 f"Model stealing submit failed. Code: {response.status_code}, content: {response.json()}"
             )
-
 
 def model_stealing_reset():
     endpoint = f"/modelstealing/reset"
